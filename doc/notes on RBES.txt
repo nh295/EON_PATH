@@ -1,0 +1,31 @@
+- i need to understand how BIOMASS by itself achieves required spatial resolution 
+ or maybe it doesn't but it's better to develop this instrument for improved accuracy than it is to develop
+ the L-band radar
+
+==> OK BIOMASS is a SAR and has a spatial resolution of 3km according to the model. Need to check whether this is 
+realistic, and BIOMASS would just be a P-band version of SMAP's SAR, which would increase the penetration 
+without decreasing the spatial resolution. 
+
+==> It seems that P-band SAR would not be great to measure soil moisture. 
+
+- we could explain it in this way" nominal case no BIOMASS> now what would be the value of developing
+a P-band soil moisture mission?
+
+- why are 2 sat architectures not necessary for max science?
+- why is score different from RBES_explain_score and res.score for best arch with uniform weights? 
+    * the actual score is computed using variables that come from defuzzyfy intervals
+	* the RBES_explain_score comes from the satisfacton of the value fact whih comes from aggregation rules
+	
+	the variables are also potentially modified by old synergy rules so I switched those off. ==> OK, solved 
+	it and both problems at the same itme.
+	
+
+1) do we need to add objectives concerning biomass ==> OK
+2) rerun case where BIOMASS can measure soil moisture, equal weights.
+2b) run case with 100% ecosystems and see if best architectures change (not expected)
+3) run case where BIOMASS does a poor job at measuring soil moisture with equal weights, now don't want BIOMASS
+3b) run case with 100% ecosystems, now BIOMASS is back
+4) creae local search around current SMAP architecture, what is best addendum, what is best descoping option
+5) create plot for BIOMASS power a fuzzy interval, impact on cost of single-sat mission
+
+- could see what is the value of the weight ratio that makes this new architecture better than the previous one?
