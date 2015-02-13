@@ -9,12 +9,10 @@
 	(slot mutate) (slot crossover)  (slot improve) (slot id) 
     (slot num-instruments) (multislot sat-assignments) (multislot ground-stations) (multislot constellations))
 
-;(defglobal ?*smap-instruments* = 0)
-;(bind ?*smap-instruments* (create$ SMAP_RAD SMAP_MWR CMIS VIIRS BIOMASS))
 (deftemplate DATABASE::list-of-instruments (multislot list))
 
 (deffacts DATABASE::list-of-instruments (DATABASE::list-of-instruments 
-        (list (create$ EON_BASE EON_BASE2 EON_BASE3 EON_50_1 EON_50_2 EON_50_3 EON_118_1 EON_118_2 EON_118_3 EON_183_1 EON_183_2 EON_183_3 EON_ATMS_1 PATH_GEOSTAR))))
+        (list (create$ EON_BASE EON_50_1 EON_118_1 EON_183_1 EON_ATMS_1 PATH_GEOSTAR))))
 (reset)
 (defquery DATABASE::get-instruments 
     ?f <- (DATABASE::list-of-instruments (list $?l))
@@ -28,8 +26,6 @@
     )
 
 (deffunction get-my-instruments ()
-    ;(bind ?list (matlabf get_instrument_list))
-    ;(if (listp ?list) then (return ?list) else (return (create$ ?list)))
 	(return (MatlabFunction getInstrumentList))
     )
 
@@ -68,9 +64,8 @@
 (CAPABILITIES::Manifested-instrument (Name EON_ATMS_1) (flies-in ?sat))
 =>
 (assert (CAPABILITIES::Manifested-instrument (Name EON_50_1) (flies-in ?sat) (Id ATMS_EON_50)))
-(assert (CAPABILITIES::Manifested-instrument (Name EON_118_1) (flies-in ?sat) (Id ATMS_EON_118)))
 (assert (CAPABILITIES::Manifested-instrument (Name EON_183_1) (flies-in ?sat) (Id ATMS_EON_183)))
-(assert (SYNERGIES::cross-registered-instruments (platform ?sat) (degree-of-cross-registration spacecraft) (instruments (create$ EON_50_1 EON_118_1 EON_183_1))))
+(assert (SYNERGIES::cross-registered-instruments (platform ?sat) (degree-of-cross-registration spacecraft) (instruments (create$ EON_50_1 EON_183_1))))
 )
 
 ;; **********************
@@ -130,30 +125,12 @@
     )
 
 (defrule MANIFEST::EON-add-baseline-instrument
+;;This is a constraint that only LEO instruments can be added to LEO orbits and GEO instruments can only be added to GEO
     (declare (salience 100))
-    ?miss <- (MANIFEST::Mission (orbit-string ~GEO) (instruments $?list-of-instruments&:(eq (length$ $?list-of-instruments) 1)))
+    ?miss <- (MANIFEST::Mission (orbit-string ~GEO) (instruments $?list-of-instruments))
     (test (eq (contains$ ?list-of-instruments EON_BASE) FALSE))
        =>
     (modify ?miss (instruments (add-element$ ?list-of-instruments EON_BASE)))
-    )
-
-(defrule MANIFEST::EON-add-baseline-instrument2
-    (declare (salience 100))
-    ?miss <- (MANIFEST::Mission (orbit-string ~GEO) (instruments $?list-of-instruments&:(eq (length$ $?list-of-instruments) 2)))
-    (test (eq (contains$ ?list-of-instruments EON_BASE) FALSE))
-	(test (eq (contains$ ?list-of-instruments EON_BASE2) FALSE))
-       =>
-    (modify ?miss (instruments (add-element$ ?list-of-instruments EON_BASE2)))
-    )
-	
-(defrule MANIFEST::EON-add-baseline-instrument3
-    (declare (salience 100))
-    ?miss <- (MANIFEST::Mission (orbit-string ~GEO) (instruments $?list-of-instruments&:(> (length$ $?list-of-instruments) 2)))
-    (test (eq (contains$ ?list-of-instruments EON_BASE) FALSE))
-	(test (eq (contains$ ?list-of-instruments EON_BASE2) FALSE))
-	(test (eq (contains$ ?list-of-instruments EON_BASE3) FALSE))
-       =>
-    (modify ?miss (instruments (add-element$ ?list-of-instruments EON_BASE3)))
     )
 	
 (deffunction compute-spatial-resolution-EON (?h ?f ?D)
@@ -161,34 +138,18 @@
     )
 
 (deffunction compute-vertical-spatial-resolution-EON (?num)
-    (return (* 4472.1 (exp (* -0.012 (sum$ ?num)))))
+    (return (* 4472.1 (exp (* -0.012 ?num))))
     )
 	
 (defrule MANIFEST::compute-EON-horizontal-spatial-resolution
     ?EON <- (CAPABILITIES::Manifested-instrument  (Name ?name&:(neq (str-index EON ?name) FALSE)) 
          (frequency# ?f&~nil) (orbit-altitude# ?h&~nil) (Horizontal-Spatial-Resolution# nil) (flies-in ?sat))
-    (CAPABILITIES::Manifested-instrument  (Name EON_BASE | EON_BASE2 | EON_BASE3) (Aperture-azimuth# ?D&~nil) (flies-in ?sat))
+    (CAPABILITIES::Manifested-instrument  (Name EON_BASE) (Aperture-azimuth# ?D&~nil) (flies-in ?sat))
     =>
     (modify ?EON (Horizontal-Spatial-Resolution# (compute-spatial-resolution-EON ?h ?f ?D)))
     )
 
-(defrule MANIFEST1::compute-EON-vertical-spatial-resolution1
-   
-   ?c <- (accumulate (bind ?count (create$ 0 0 0))                        ;; initializer: num channels at 50, 118, and 183 GHz
-                (bind ?count (.+$ ?count $?num))                    ;; action
-                ?count                                        ;; result
-                (CAPABILITIES::Manifested-instrument (num-of-mmwave-band-channels $?num&:(notempty$ $?num)) (Vertical-Spatial-Resolution# nil) )) ;; CE
-    =>
-    (assert (SYNERGIES::NUM-CHANNELS (num-channels ?c)))
-    )
-	
-(defrule MANIFEST1::compute-EON-vertical-spatial-resolution2
-?EON <- (CAPABILITIES::Manifested-instrument  (Vertical-Spatial-Resolution# nil))
-(SYNERGIES::NUM-CHANNELS (num-channels ?c&~nil))
-=>
-(modify ?EON (Vertical-Spatial-Resolution# (compute-vertical-spatial-resolution-EON ?c)))
 
-)
 
 (deffunction between (?x ?mn ?mx)
     ;(printout t ?x " " ?mn " " ?mx crlf)
@@ -216,16 +177,6 @@
  (propellant-injection hydrazine) (slew-angle 2.0)
 )
 )
-;(defrule CAPABILITIES::cross-register-measurements-from-cross-registered-instruments;;;
-;	(CAPABILITIES::Manifested-instrument (Name ?ins1) (measurement-ids $?m1));x;
-;	(CAPABILITIES::Manifested-instrument (Name ?ins2&~?ins1) (measurement-ids $?m2))
-;	(SYNERGIES::cross-registered-instruments (instruments $?ins))
-;	(test (contains$ $?ins ?ins1))
-;	(test (contains$ $?ins ?ins2))
-;	
-;	=>
-;	(assert (SYNERGIES::cross-registered (measurements (str-cat $?m1 $?m2))))
-;)
 
 (defrule SYNERGIES::pressure
 ?m <- (REQUIREMENTS::Measurement (Parameter "1.2.1 Atmospheric temperature") (Id ?id1) (taken-by ?ins1&~PATH_GEOSTAR) (orbit-string ?orb&~nil) (frequency# ?freq1))
@@ -249,8 +200,8 @@
 ;; FOR ATMS ACCURACY AND HSR
 ;; ***************************
 (defrule SYNERGIES::ATMS-atmospheric-temperature-HSR-accuracy
-(REQUIREMENTS::Measurement (Parameter "1.2.1 Atmospheric temperature") (frequency# 118e9) (Id ?id1) (taken-by ?ins1) (Horizontal-Spatial-Resolution# ?hsr))
-(REQUIREMENTS::Measurement (Parameter "1.2.1 Atmospheric temperature") (frequency# 50e9) (Id ?id2) (taken-by ?ins2))
+(REQUIREMENTS::Measurement (frequency# 183e9) (Id ?id1)(taken-by ?ins1))
+(REQUIREMENTS::Measurement (Parameter "1.2.1 Atmospheric temperature") (frequency# 50e9) (Id ?id2) (taken-by ?ins2)(Horizontal-Spatial-Resolution# ?hsr))
 (SYNERGIES::cross-registered (measurements $?meas&:(contains$ $?meas ?id1)&:(contains$ $?meas ?id2)) (degree-of-cross-registration spacecraft))
 =>
 (assert (REQUIREMENTS::Measurement (Parameter "1.2.1 Atmospheric temperature") (Accuracy# 1.25) (Vertical-Spatial-Resolution# 2000) (Horizontal-Spatial-Resolution# ?hsr) 
@@ -258,8 +209,8 @@
 )
 
 (defrule SYNERGIES::ATMS-surface-temperature-HSR-accuracy
-(REQUIREMENTS::Measurement (Parameter "1.2.2 Air temperature at surface") (frequency# 118e9) (Id ?id1) (taken-by ?ins1) (Horizontal-Spatial-Resolution# ?hsr))
-(REQUIREMENTS::Measurement (Parameter "1.2.2 Air temperature at surface") (frequency# 50e9) (Id ?id2) (taken-by ?ins2))
+(REQUIREMENTS::Measurement (frequency# 183e9) (Id ?id1)(taken-by ?ins1))
+(REQUIREMENTS::Measurement (Parameter "1.2.2 Air temperature at surface") (frequency# 50e9) (Id ?id2) (taken-by ?ins2)(Horizontal-Spatial-Resolution# ?hsr))
 (SYNERGIES::cross-registered (measurements $?meas&:(contains$ $?meas ?id1)&:(contains$ $?meas ?id2)) (degree-of-cross-registration spacecraft))
 =>
 (assert (REQUIREMENTS::Measurement (Parameter "1.2.2 Air temperature at surface") (Accuracy# 1.25) (Horizontal-Spatial-Resolution# ?hsr) 
@@ -267,8 +218,8 @@
 )
 
 (defrule SYNERGIES::ATMS-atmospheric-wind-speed-HSR-accuracy
-(REQUIREMENTS::Measurement (Parameter "1.4.1 atmospheric wind speed") (Id ?id1) (frequency# 118e9) (taken-by ?ins1) (Horizontal-Spatial-Resolution# ?hsr))
-(REQUIREMENTS::Measurement (Parameter "1.4.1 atmospheric wind speed") (Id ?id2) (frequency# 50e9) (taken-by ?ins2))
+(REQUIREMENTS::Measurement (frequency# 183e9) (Id ?id1)(taken-by ?ins1))
+(REQUIREMENTS::Measurement (Parameter "1.4.1 atmospheric wind speed") (Id ?id2) (frequency# 50e9) (taken-by ?ins2)(Horizontal-Spatial-Resolution# ?hsr))
 (SYNERGIES::cross-registered (measurements $?meas&:(contains$ $?meas ?id1)&:(contains$ $?meas ?id2)) (degree-of-cross-registration spacecraft))
 =>
 (assert (REQUIREMENTS::Measurement (Parameter "1.4.1 atmospheric wind speed") (Accuracy# 2.5) (Vertical-Spatial-Resolution# 2000) (Horizontal-Spatial-Resolution# ?hsr) 
@@ -276,8 +227,8 @@
 )
 
 (defrule SYNERGIES::ATMS-air-wind-surface-HSR-accuracy
-(REQUIREMENTS::Measurement (Parameter "1.4.3 Air wind at surface") (Id ?id1) (frequency# 118e9) (taken-by ?ins1) (Horizontal-Spatial-Resolution# ?hsr))
-(REQUIREMENTS::Measurement (Parameter "1.4.3 Air wind at surface") (Id ?id2) (frequency# 50e9) (taken-by ?ins2))
+(REQUIREMENTS::Measurement (frequency# 183e9) (Id ?id1)(taken-by ?ins1))
+(REQUIREMENTS::Measurement (Parameter "1.4.3 Air wind at surface") (Id ?id2) (frequency# 50e9) (taken-by ?ins2)(Horizontal-Spatial-Resolution# ?hsr))
 (SYNERGIES::cross-registered (measurements $?meas&:(contains$ $?meas ?id1)&:(contains$ $?meas ?id2)) (degree-of-cross-registration spacecraft))
 =>
 (assert (REQUIREMENTS::Measurement (Parameter "1.4.3 Air wind at surface") (Accuracy# 2.5) (Horizontal-Spatial-Resolution# ?hsr) 

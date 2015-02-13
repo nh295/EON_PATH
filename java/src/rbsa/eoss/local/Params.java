@@ -144,6 +144,11 @@ public class Params {
     public static double time_horizon;
     public static HashMap<String,Double> lifetimes;
     
+    
+    //To access Dropbox files
+    public final String APP_KEY = "501z5dhek2czvcm";
+    public final String APP_SECRET = "q21mrispb7be3oz";
+    
     public Params( String p , String mode, String name, String run_mode, String search_clp)
     {
         //this.master_xls = master_xls;
@@ -153,7 +158,7 @@ public class Params {
         this.name = name;
         this.run_mode = run_mode;
         path_save_results = path + "\\results";
-        capability_dat_file = path_save_results + "\\capabilities-best.dat";
+        capability_dat_file = path_save_results + "\\capabilities2015-nominal.dat";
         revtimes_dat_file = path_save_results + "\\revtimes.dat";
         dsm_dat_file = path_save_results + "\\all_dsms2014-02-05-22-00-15.dat";//all_dsms2013-09-26-16-31-57
         scores_dat_file = path_save_results  + "\\scores2014-02-05-21-53-09.dat";
@@ -210,7 +215,7 @@ public class Params {
             search_heuristic_rules_clp   = path + "\\clp\\" + search_clp + ".clp";
         
         down_selection_rules_clp     = path + "\\clp\\down_selection_rules_smap.clp";
-        adhoc_rules_clp              = path + "\\clp\\smap_rules_sensitivity.clp";
+        adhoc_rules_clp              = path + "\\clp\\smap_rules_test.clp";
       
         // Metrics for utility and pareto calculations
         pareto_metrics = new ArrayList<String>();
@@ -265,45 +270,10 @@ public class Params {
         instrument_sizes.put("EON_183_1",0.5);
         instrument_sizes.put("EON_118_1",0.5);
         instrument_sizes.put("EON_50_1",0.5);
-        instrument_sizes.put("EON_23_31",0.5);
-        instrument_sizes.put("EON_90_165_225",0.5);
         instrument_sizes.put("EON_ATMS_1",2.0);
-        
-        instrument_costs = new HashMap<String,Double>();//{"PATH_GEOSTAR","EON_50_1","EON_118_1","EON_183_1"};
-        instrument_costs.put("PATH_GEOSTAR",200.0);
-        instrument_costs.put("EON_183_1",1.0);
-        instrument_costs.put("EON_118_1",1.0);
-        instrument_costs.put("EON_50_1",1.0);
-        instrument_costs.put("EON_23_31",1.0);
-        instrument_costs.put("EON_90_165_225",1.0);
-        instrument_costs.put("EON_ATMS_1",4.0);
-        
-        bus_costs = new TreeMap<Double,Double>();//Number of Cubesats units - $M
-        bus_costs.put(1.0,0.3);
-        bus_costs.put(2.0,0.7);
-        bus_costs.put(3.0,1.0);
-        bus_costs.put(4.0,2.0);
-        bus_costs.put(6.0,3.0);
-        bus_costs.put(12.0,4.0);
-        bus_costs.put(100.0,100.0);
-        
-        bus_lifetimes = new TreeMap<Double,Double>();//lifetime wrt Cubesats units - yrs
-        bus_lifetimes.put(0.5,1.0);
-        bus_lifetimes.put(1.0,1.0);
-        bus_lifetimes.put(1.5,1.0);
-        bus_lifetimes.put(2.0,1.0);
-        bus_lifetimes.put(2.5,1.0);
-        bus_lifetimes.put(3.0,1.0);
-        bus_lifetimes.put(3.5,1.0);
-        bus_lifetimes.put(4.0,1.0);
-        bus_lifetimes.put(4.5,1.0);
-        bus_lifetimes.put(6.0,1.0);
-        bus_lifetimes.put(12.0,3.0);
-        bus_lifetimes.put(100.0,3.0);
-        
+
         launch_costs = new HashMap<String,Double>();
         launch_costs.put("GEO-35788-equat-NA",100.0);
-        launch_costs.put("LEO-400-ISS-NA",5.0);
         launch_costs.put("SSO-600-SSO-DD",5.0);
         launch_costs.put("SSO-800-SSO-PM",5.0);
         launch_costs.put("SSO-800-SSO-AM",5.0);

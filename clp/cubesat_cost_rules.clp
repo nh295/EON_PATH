@@ -17,7 +17,6 @@
 )
 
 (deffunction assign-bus (?vol)
-(if(<= ?vol 0.5) then (return 1U))
 (if(<= ?vol 1.0) then (return 3U))
 (if(<= ?vol 2.5) then (return 6U))
 (if(<= ?vol 5) then (return 12U))
@@ -42,11 +41,10 @@
 )
 
 (deffunction get-bus-lifetime (?nunits)
-(if(eq ?nunits 1U) then (return 1.0))
-(if(eq ?nunits 3U) then (return 1.0))
-(if(eq ?nunits 6U) then (return 3.0))
-(if(eq ?nunits 12U) then (return 3.0))
-(if(eq ?nunits 100U) then (return 3.0))
+(if(eq ?nunits 3U) then (return 2.0))
+(if(eq ?nunits 6U) then (return 4.0))
+(if(eq ?nunits 12U) then (return 4.0))
+(if(eq ?nunits 100U) then (return 10.0))
 (throw new Exception "CUBESAT-COST: unknown bus size in get-bus-lifetime")
 )
 
@@ -74,10 +72,9 @@
 )
 
 (deffunction get-bus-cost(?nunits)
-(if(eq ?nunits 1U) then (return 0.3))
-(if(eq ?nunits 3U) then (return 1.0))
-(if(eq ?nunits 6U) then (return 3.0))
-(if(eq ?nunits 12U) then (return 4.0))
+(if(eq ?nunits 3U) then (return 2.0))
+(if(eq ?nunits 6U) then (return 4.0))
+(if(eq ?nunits 12U) then (return 5.0))
 (return 100.0)
 )
 

@@ -1,5 +1,5 @@
 
-cd('C:\Users\Nozomi\Dropbox\Nozomi - Dani\RBES SMAP for IEEEAero14')
+cd('C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH')
 
 if ~exist('params','var') || isempty(params)
         javaaddpath('.\java\jess.jar');
@@ -12,7 +12,7 @@ if ~exist('params','var') || isempty(params)
     import rbsa.eoss.local.*
     import java.io.*;
     %         folder = 'C:\Users\DS925\Dropbox\Nozomi - Dani\RBES SMAP for IEEEAero14';
-    folder =  'C:\Users\Nozomi\Dropbox\Nozomi - Dani\RBES SMAP for IEEEAero14';
+    folder =  'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH';
     %         folder = 'C:\Users\SEAK1\Dropbox\Nozomi - Dani\RBES SMAP for IEEEAero14';
     params = rbsa.eoss.local.Params(folder,'FUZZY-ATTRIBUTES','test','normal','');%C:\\Users\\Ana-Dani\\Dropbox\\EOCubesats\\RBES_Cubesats7" OR C:\\Users\\dani\\My Documents\\My Dropbox\\EOCubesats\\RBES_Cubesats7
 end

@@ -20,6 +20,10 @@ import java.util.Iterator;
 import java.util.regex.*;
 import org.apache.commons.lang3.StringUtils;
 
+import com.dropbox.core.*;
+import java.io.*;
+import java.util.Locale;
+
 public class JessInitializer {
         
     private static JessInitializer instance = null;
@@ -916,7 +920,7 @@ public class JessInitializer {
                         nattrib = 0;
                         subobj_tests = new HashMap();
                     } else {
-                        //start next requirement rule
+                        //start first requirement rule
                         rhs = "";
                         rhs2 = " (bind ?list (create$ ";
                         rhs3 = " (bind ?vals (create$ ";
@@ -1398,7 +1402,8 @@ public class JessInitializer {
                     
                     String capability_type = row[0].getContents();//Measurement
                     if (!capability_type.equalsIgnoreCase("Measurement")) {
-                        throw new Exception("loadCapabilityRules: Type of capability not recognized (use Measurement)");
+                        System.out.println("check line 1401 in JessInitializer. ATMS maybe causing some issues");
+//                        throw new Exception("loadCapabilityRules: Type of capability not recognized (use Measurement)");
                     }
                     String att_value_pair = row[1].getContents();
                     String[] tokens2 = att_value_pair.split(" ",2);

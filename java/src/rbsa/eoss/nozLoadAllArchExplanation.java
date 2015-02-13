@@ -16,8 +16,8 @@ import rbsa.eoss.local.Params;
  */
 public class nozLoadAllArchExplanation {
     public static void main(String[] args){
-//        String path  = "C:\\Users\\SEAK1\\Dropbox\\Nozomi - Dani\\RBES SMAP for IEEEAero14";//RBES SMAP for IEEEAero14 code
-        String path  = "C:\\Users\\Nozomi\\Dropbox\\Nozomi - Dani\\RBES SMAP for IEEEAero14";//RBES SMAP for IEEEAero14 code
+//        String path  = "C:\\Users\\SEAK1\\Dropbox\\Nozomi - Dani\\EON_PATH";//RBES SMAP for IEEEAero14 code
+        String path  = "C:\\Users\\Nozomi\\Dropbox\\Nozomi - Dani\\EON_PATH";//RBES SMAP for IEEEAero14 code
         ArchitectureEvaluator AE = ArchitectureEvaluator.getInstance();
         ArchTradespaceExplorer ATE = ArchTradespaceExplorer.getInstance();
         ResultManager RM = ResultManager.getInstance();

@@ -88,6 +88,37 @@ for i=1:a
 end
 percent_pf_with_n_inst = pf_num_inst./a;
 
+%% num sats per plane
+%first num is for sats with 0 instruments
+%percent arch with n sats per plane
+arch_n_satsPerPlane = zeros(a,1);
+archs_with_n_satsPerPlane = zeros(9,1);
+for i=1:narch
+    nsat = 1;
+    nsat = archs{i}.getNsats + nsat;
+    arch_n_satsPerPlane(i)=nsat;
+    archs_with_n_satsPerPlane(nsat) = archs_with_n_satsPerPlane(nsat)+1;
+end
+percent_with_n_satsPerPlane = archs_with_n_satsPerPlane/narch;
+
+%percent arch with n sat on pf
+n_satsPerPlane_on_pf = zeros(9,1);
+for i=1:a
+    nsat = arch_n_satsPerPlane(inds(i))+1;
+    n_satsPerPlane_on_pf(nsat) = n_satsPerPlane_on_pf(nsat)+1;
+end
+percent_with_n_satsPerPlane_pf = n_satsPerPlane_on_pf./archs_with_n_satsPerPlane;
+
+%percent arch on pf with n sat 
+pf_num_satsPerPlane = zeros(9,1);
+for i=1:a
+    nsat = 1;
+    nsat = pf_archs{i}.getNsats + nsat;
+    pf_num_satsPerPlane(nsat) = pf_num_satsPerPlane(nsat)+1;
+end
+percent_pf_with_n_satsPerPlane = pf_num_satsPerPlane./a;
+
+
 %% GEO vs no GEO
 
 %percent arch with GEO
@@ -180,9 +211,11 @@ with_ATMS_on_pf = 0;
 for i=1:a
     if arch_with_50_183(inds(i))
         with_50_183_on_pf = with_50_183_on_pf+1;
-    elseif arch_with_118_183(inds(i))
+    end
+    if arch_with_118_183(inds(i))
         with_118_183_on_pf = with_118_183_on_pf+1;
-    elseif arch_with_ATMS(inds(i))
+    end
+    if arch_with_ATMS(inds(i))
         with_ATMS_on_pf = with_ATMS_on_pf+1;
     end
 end
@@ -231,3 +264,106 @@ end
 percent_pf_with_50_183 = pf_with_50_183/a;
 percent_pf_with_118_183 = pf_with_118_183/a;
 percent_pf_with_ATMS = pf_with_ATMS/a;
+
+%% occupies orbit
+
+%percent arch occupying orbit x
+arch_in_GEO = zeros(a,1);
+arch_in_600SSO = zeros(a,1);
+arch_in_600ISS = zeros(a,1);
+arch_in_800SSOAM = zeros(a,1);
+arch_in_800SSOPM = zeros(a,1);
+archs_in_GEO = 0;
+archs_in_600SSO = 0;
+archs_in_600ISS = 0;
+archs_in_800SSOAM = 0;
+archs_in_800SSOPM = 0;
+
+for i=1:narch
+    for j = 1:length(params.orbit_list)
+        tmp = archs{i}.getPayloadInOrbit(params.orbit_list(j));
+        if tmp.length>0
+            if j==1
+                arch_in_GEO(i) = 1;
+                archs_in_GEO  = archs_in_GEO+1;
+            elseif j==2 
+                arch_in_600SSO(i) = 1;
+                archs_in_600SSO = archs_in_600SSO+1;
+            elseif j==3
+                arch_in_600ISS(i) = 1;
+                archs_in_600ISS = archs_in_600ISS+1;
+            elseif j==4
+                arch_in_800SSOAM(i) = 1;
+                archs_in_800SSOAM = archs_in_800SSOAM+1;
+            elseif j==5
+                arch_in_800SSOPM(i) = 1; 
+                archs_in_800SSOPM = archs_in_800SSOPM+1;
+            end
+        end
+    end
+end
+percent_in_GEO = archs_in_GEO/narch;
+percent_in_600SSO = archs_in_600SSO/narch;
+percent_in_600ISS = archs_in_600ISS/narch;
+percent_in_800SSOAM = archs_in_800SSOAM/narch;
+percent_in_800SSOPM = archs_in_800SSOPM/narch;
+
+%percent arch with GEO on pf
+in_GEO_on_pf = 0;
+in_600SSO_on_pf = 0;
+in_600ISS_on_pf = 0;
+in_800SSOAM_on_pf = 0;
+in_800SSOPM_on_pf =0;
+for i=1:a
+    if arch_in_GEO(inds(i))
+        in_GEO_on_pf = in_GEO_on_pf+1;
+    end
+    if arch_in_600SSO(inds(i))
+        in_600SSO_on_pf = in_600SSO_on_pf+1;
+    end
+    if arch_in_600ISS(inds(i))
+        in_600ISS_on_pf = in_600ISS_on_pf+1;
+    end
+    if arch_in_800SSOAM(inds(i))
+        in_800SSOAM_on_pf = in_800SSOAM_on_pf+1;
+    end
+    if arch_in_800SSOPM(inds(i))
+        in_800SSOPM_on_pf = in_800SSOPM_on_pf+1;
+    end
+end
+percent_in_GEO_pf = in_GEO_on_pf/archs_in_GEO;
+percent_in_600SSO_pf = in_600SSO_on_pf/archs_in_600SSO;
+percent_in_600ISS_pf = in_600ISS_on_pf/archs_in_600ISS;
+percent_in_800SSOAM_pf = in_800SSOAM_on_pf/archs_in_800SSOAM;
+percent_in_800SSOPM_pf = in_800SSOPM_on_pf/archs_in_800SSOPM;
+
+%percent arch on pf with GEO  
+pf_in_GEO = 0;
+pf_in_600SSO = 0;
+pf_in_600ISS = 0;
+pf_in_800SSOAM = 0;
+pf_in_800SSOPM = 0;
+for i=1:a
+    for j = 1:length(params.orbit_list)
+        tmp = pf_archs{i}.getPayloadInOrbit(params.orbit_list(j));
+        if tmp.length>0
+            if j==1
+                pf_in_GEO = pf_in_GEO + 1;
+            elseif j==2 
+                pf_in_600SSO = pf_in_600SSO + 1;
+            elseif j==3
+                pf_in_600ISS = pf_in_600ISS + 1;
+            elseif j==4
+                pf_in_800SSOAM = pf_in_800SSOAM + 1;
+            elseif j==5
+                pf_in_800SSOPM = pf_in_800SSOPM + 1; 
+            end
+        end
+    end
+end
+
+percent_pf_in_GEO = pf_in_GEO/a;
+percent_pf_in_600SSO = pf_in_600SSO/a;
+percent_pf_in_600ISS = pf_in_600ISS/a;
+percent_pf_in_800SSOAM = pf_in_800SSOAM/a;
+percent_pf_in_800SSOPM = pf_in_800SSOPM/a;

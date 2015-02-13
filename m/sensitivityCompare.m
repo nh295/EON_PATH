@@ -1,5 +1,5 @@
 
-cd('C:\Users\Nozomi\Dropbox\Nozomi - Dani\RBES SMAP for IEEEAero14')
+cd('C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH')
 
 if ~exist('params','var') || isempty(params)
         javaaddpath('.\java\jess.jar');

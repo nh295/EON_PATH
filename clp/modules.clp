@@ -1,7 +1,7 @@
 ;; modules.clp (USED!)
 (defmodule DATABASE)
 (defmodule MANIFEST)
-(defmodule MANIFEST1)
+(defmodule CHANNELS)
 (defmodule FUZZY)
 (defmodule ASSIMILATION)
 (defmodule ASSIMILATION2)

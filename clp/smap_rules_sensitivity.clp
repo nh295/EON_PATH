@@ -253,7 +253,7 @@
 (REQUIREMENTS::Measurement (Parameter "1.2.1 Atmospheric temperature") (frequency# 50e9) (Id ?id2) (taken-by ?ins2))
 (SYNERGIES::cross-registered (measurements $?meas&:(contains$ $?meas ?id1)&:(contains$ $?meas ?id2)) (degree-of-cross-registration spacecraft))
 =>
-(assert (REQUIREMENTS::Measurement (Parameter "1.2.1 Atmospheric temperature") (Accuracy# 0.19) (Vertical-Spatial-Resolution# 99) (Horizontal-Spatial-Resolution# ?hsr) 
+(assert (REQUIREMENTS::Measurement (Parameter "1.2.1 Atmospheric temperature") (Accuracy# 0.19) (Vertical-Spatial-Resolution# 99) (Horizontal-Spatial-Resolution# 499) 
 (Id (str-cat ?id1 "-syn-" ?id2)) (taken-by (str-cat ?ins1 "-syn-" ?ins2))))
 )
 
@@ -271,7 +271,7 @@
 (REQUIREMENTS::Measurement (Parameter "1.4.1 atmospheric wind speed") (Id ?id2) (frequency# 50e9) (taken-by ?ins2))
 (SYNERGIES::cross-registered (measurements $?meas&:(contains$ $?meas ?id1)&:(contains$ $?meas ?id2)) (degree-of-cross-registration spacecraft))
 =>
-(assert (REQUIREMENTS::Measurement (Parameter "1.4.1 atmospheric wind speed") (Accuracy# 0.9) (Vertical-Spatial-Resolution# 149) (Horizontal-Spatial-Resolution# ?hsr) 
+(assert (REQUIREMENTS::Measurement (Parameter "1.4.1 atmospheric wind speed") (Accuracy# 0.9) (Vertical-Spatial-Resolution# 149) (Horizontal-Spatial-Resolution# 499) 
 (Id (str-cat ?id1 "-syn-" ?id2)) (taken-by (str-cat ?ins1 "-syn-" ?ins2))))
 )
 
@@ -289,7 +289,7 @@
 (REQUIREMENTS::Measurement (Id ?id2) (frequency# 50e9) (taken-by ?ins2))
 (SYNERGIES::cross-registered (measurements $?meas&:(contains$ $?meas ?id1)&:(contains$ $?meas ?id2)) (degree-of-cross-registration spacecraft))
 =>
-(assert (REQUIREMENTS::Measurement (Parameter "1.3.1 Atmospheric humidity") (Accuracy# 0.019) (Vertical-Spatial-Resolution# 99) (Horizontal-Spatial-Resolution# ?hsr) 
+(assert (REQUIREMENTS::Measurement (Parameter "1.3.1 Atmospheric humidity") (Accuracy# 0.019) (Vertical-Spatial-Resolution# 99) (Horizontal-Spatial-Resolution# 499) 
 (Id (str-cat ?id1 "-syn-" ?id2)) (taken-by (str-cat ?ins1 "-syn-" ?ins2))))
 )
 
@@ -316,7 +316,7 @@
 (REQUIREMENTS::Measurement (Id ?id2) (frequency# 50e9) (taken-by ?ins2))
 (SYNERGIES::cross-registered (measurements $?meas&:(contains$ $?meas ?id1)&:(contains$ $?meas ?id2)) (degree-of-cross-registration spacecraft))
 =>
-(assert (REQUIREMENTS::Measurement (Parameter "1.7.3 Precipitation rate") (Accuracy# 0.09) (Vertical-Spatial-Resolution# 2000) (Horizontal-Spatial-Resolution# ?hsr) 
+(assert (REQUIREMENTS::Measurement (Parameter "1.7.3 Precipitation rate") (Accuracy# 0.09) (Vertical-Spatial-Resolution# 2000) (Horizontal-Spatial-Resolution# 499) 
 (Id (str-cat ?id1 "-syn-" ?id2)) (taken-by (str-cat ?ins1 "-syn-" ?ins2))))
 )
 

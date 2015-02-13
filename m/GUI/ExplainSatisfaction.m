@@ -62,13 +62,13 @@ guidata(hObject, handles);
 % uiwait(handles.figure1);
 global zeResult
 h = msgbox('Loading Explanations. Please Wait');
-details = create_satisfaction_table(zeResult)
+details = create_satisfaction_table(zeResult);
 set(handles.all_subobj_table, 'Data',details,'ColumnWidth',{130,300,100,200});
 close(h);
 
 % by default load the AERO1-1
 global AE params subobj
-subobj = char(details(2,1))
+subobj = char(details(2,1));
 ret = capa_vs_req_from_explanation_field(zeResult,subobj,AE,params);
 cell_resize(handles,ret);
 set(handles.subobj,'String',subobj);
@@ -158,9 +158,12 @@ function cell_resize(handles,ret)
 [r,c] = size(ret);
 col_width = 750/c;
 col_widths = num2cell(ones(1,c)*col_width);
-ret2 = highlight_details(ret);
-set( handles.detail_subobj_table, 'Data', ret2,'ColumnWidth',col_widths);
-
+if r>1
+    ret2 = highlight_details(ret);
+    set( handles.detail_subobj_table, 'Data', ret2,'ColumnWidth',col_widths);
+else
+    set( handles.detail_subobj_table, 'Data', ret,'ColumnWidth',col_widths);
+end
 % highlights satisfaction that are 1.0 as blue or 0.0 as red
 function [ret2] = highlight_details(ret)
 [r,c] = size(ret);

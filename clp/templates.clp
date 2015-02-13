@@ -23,7 +23,7 @@
     (multislot measurements) (slot degree-of-cross-registration) (slot platform))
   
 (deftemplate SYNERGIES::cross-registered-instruments "Declare a set of measurements as cross-registered"
-    (multislot instruments) (slot degree-of-cross-registration) (slot platform))
+    (multislot instruments) (slot degree-of-cross-registration) (slot platform)(slot total-num-channels (default 0)))
 
 (deftemplate REASONING::partially-satisfied "Requirements that are partially satisfied" (slot subobjective)
     (slot objective) (slot parameter) (slot taken-by) (slot attribute) (slot required) (slot achieved))

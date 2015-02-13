@@ -4,28 +4,22 @@
  */
 package rbsa.eoss.local;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import rbsa.eoss.ArchTradespaceExplorer;
 import rbsa.eoss.Architecture;
 import rbsa.eoss.ArchitectureEvaluator;
 import rbsa.eoss.ArchitectureGenerator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import rbsa.eoss.ArchTradespaceExplorer;
-import rbsa.eoss.SearchOptions;
 import rbsa.eoss.Result;
 import rbsa.eoss.ResultCollection;
 import rbsa.eoss.ResultManager;
+import rbsa.eoss.SearchOptions;
 import rbsa.eoss.SearchPerformance;
 import rbsa.eoss.SearchPerformanceComparator;
-import java.util.HashMap;
-import rbsa.eoss.NDSM;
 import rbsa.eoss.SearchPerformanceManager;
-//import rbsa.eoss.DSM;
 /**
  *
  * @author dani
@@ -39,13 +33,19 @@ public class RBSAEOSSSMAP {
         
         //PATH
         //String path  = "C:\\\\Users\\\\Ana-Dani\\\\Dropbox\\\\EOCubesats\\\\RBES_Cubesats7";//Cubesats code
-        //String path  = "C:\\\\Users\\\\Ana-Dani\\\\Dropbox\\\\RBES SMAP for IEEEAero14";//RBES SMAP for IEEEAero14 code
-        String path  = "C:\\Users\\Nozomi\\Dropbox\\Nozomi - Dani\\RBES SMAP for IEEEAero14";//RBES SMAP for IEEEAero14 code
-//        String path  = "C:\\Users\\SEAK1\\Dropbox\\Nozomi - Dani\\RBES SMAP for IEEEAero14";
+//        String path  = "C:\\\\Users\\\\Ana-Dani\\\\Dropbox\\\\EON_PATH";//RBES SMAP for IEEEAero14 code
+//        String path  = "C:\\Users\\Nozomi\\Dropbox\\Nozomi - Dani\\EON_PATH";//RBES SMAP for IEEEAero14 code
+//        String path  = "C:\\Users\\SEAK1\\Dropbox\\Nozomi - Dani\\EON_PATH";
         //String path  = "C:\\\\Users\\\\DS925\\\\Dropbox\\\\Nozomi - Dani\\\\RBES SMAP for IEEEAero14";//RBES SMAP for IEEEAero14 code
-//        String path  = "C:\\Users\\Ana-Dani\\Dropbox\\Nozomi - Dani\\RBES SMAP for IEEEAero14";
+        String path  = "C:\\Users\\Ana-Dani\\Dropbox\\Nozomi - Dani\\EON_PATH";
+//        String path  = "C:\\Users\\Nozomi\\Dropbox\\Nozomi - Dani\\EON_PATH";
+//        String path = "C:\\Users\\Administrator\\Dropbox\\EON_PATH";
+//        System.out.println("Working Directory = " +
+//              System.getProperty("user.dir"));
+//            
+//        String path = "Macintosh HD\\Users\\nozomihitomi\\Dropbox\\Nozomi - Dani\\EON_PATH";
         
-        int MODE = 6;
+        int MODE = 3;
         ArchitectureEvaluator AE = ArchitectureEvaluator.getInstance();
         ArchTradespaceExplorer ATE = ArchTradespaceExplorer.getInstance();
         ResultManager RM = ResultManager.getInstance();
@@ -53,16 +53,13 @@ public class RBSAEOSSSMAP {
         String search_clps = "";
         switch(MODE) {
             case 1: //1 arch
-                params = new Params( path, "FUZZY-ATTRIBUTES", "test","debug",search_clps);//FUZZY or CRISP
+                params = new Params( path, "CRISP-ATTRIBUTES", "test","debug",search_clps);//FUZZY or CRISP
                 AE.init(1);
                 Architecture arch = ArchitectureGenerator.getInstance().getTestArch();
-                
                 Result result1 = AE.evaluateArchitecture(arch,"Slow");
                 System.out.println("Slow. Arch " + arch.toBitString() + "=> science = " + result1.getScience() + " cost = " + result1.getCost());
-                ArchitectureEvaluator.getInstance().pushResult(result1);
                 //Result result2 = AE.evaluateArchitecture(arch,"Fast");
                 //System.out.println("Fast. Arch " + arch.toBitString() + "=> science = " + result2.getScience() + " cost = " + result2.getCost());
-                //ArchitectureEvaluator.getInstance().pushResult(result2);
                 RM.saveResultCollection(new ResultCollection(AE.getResults()));
                 System.out.println("DONE");
                 break;
@@ -79,12 +76,12 @@ public class RBSAEOSSSMAP {
                 break;
             case 3://Search
                 int POP_SIZE = 500;
-                int MAX_SEARCH_ITS = 5;
+                int MAX_SEARCH_ITS = 2;
                 //ArrayList<Architecture> init_pop = null;
                 params = new Params( path, "CRISP-ATTRIBUTES", "test","normal","search_heuristic_rules_smap_2");//FUZZY or CRISP
                 ArrayList<Architecture> init_pop = null;
                 //ArrayList<Architecture> init_pop = ResultManager.getInstance().loadResultCollectionFromFile(params.initial_pop).getPopulation();
-                for (int i = 0;i<20;i++) {
+                for (int i = 0;i<25;i++) {
                     params = new Params( path, "CRISP-ATTRIBUTES", "test","normal","search_heuristic_rules_smap_2");//FUZZY or CRISP
                     AE.init(11);
                     AE.evalMinMax();
@@ -158,7 +155,7 @@ public class RBSAEOSSSMAP {
                 break;
             case 6://Update capabilities file
                 params = new Params( path, "CRISP-ATTRIBUTES", "test","update_capabilities",search_clps);//FUZZY or CRISP
-                AE.init(3);
+                AE.init(7);
                 AE.precomputeCapabilities();                
                 try{
                     SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd-HH-mm-ss" );
@@ -256,6 +253,26 @@ public class RBSAEOSSSMAP {
                 RM.saveResultCollection(new ResultCollection(AE.getResults()));
                 System.out.println("DONE");
                 break;
+            case 10: //use when you have data files you can load (maybe useful if computer restarts mid way through a run)
+                POP_SIZE = 500;
+                MAX_SEARCH_ITS = 2;
+                
+                params = new Params( path, "CRISP-ATTRIBUTES", "test","normal","search_heuristic_rules_smap_2");//FUZZY or CRISP
+                ResultCollection loadedResCol = RM.loadResultCollectionFromFile(Params.path_save_results + "\\2015-01-07_06-14-26_test.rs");
+                ArrayList<Architecture> init_popul = loadedResCol.getPopulation();    //ArrayList<Architecture> init_pop = ResultManager.getInstance().loadResultCollectionFromFile(params.initial_pop).getPopulation();
+                for (int i = 0;i<9;i++) {
+                    params = new Params( path, "CRISP-ATTRIBUTES", "test","normal","search_heuristic_rules_smap_2");//FUZZY or CRISP
+                    AE.init(7);
+                    AE.evalMinMax();
+                    ATE.setTerm_crit(new SearchOptions(POP_SIZE,MAX_SEARCH_ITS,0.5,0.1,0.5,init_popul));
+                    ATE.search_NSGA2();
+                    System.out.println("PERF: " + ATE.getSp().toString());
+                    ResultCollection c = new ResultCollection(AE.getResults());//
+                    init_popul = c.getPopulation();
+                    RM.saveResultCollection(c);
+                    ATE.clear();
+                    AE.clear();
+                }
             default:
                 System.out.println("Choose a mode between 1 and 9");
         }

@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jess.Fact;
 import jess.JessException;
 import jess.RU;
@@ -123,8 +125,13 @@ public class GenericTask implements Callable {
                     }
                 }
             }
-            r.setFocus( "MANIFEST1" );
+            
+            ArrayList<String> extraRules=addExtraRules(r);
+            r.setFocus( "CHANNELS" );
             r.run();
+            Iterator<String> iter = extraRules.iterator();
+            while(iter.hasNext())
+                r.removeDefrule(iter.next());
                         
             //Revisit times
             Iterator parameters = Params.parameter_list.iterator();
@@ -157,8 +164,8 @@ public class GenericTask implements Callable {
             r.setFocus( "ASSIMILATION" );
             r.run();
             
-            r.setFocus( "FUZZY" );
-            r.run();
+//            r.setFocus( "FUZZY" );
+//            r.run();
             
             r.setFocus( "SYNERGIES" );
             r.run();
@@ -346,7 +353,6 @@ public class GenericTask implements Callable {
         r.setFocus("MANIFEST");
         r.run();
         
-        
         double cost = 0.0;
         if ((Params.req_mode.equalsIgnoreCase("FUZZY-CASES")) || (Params.req_mode.equalsIgnoreCase("FUZZY-ATTRIBUTES"))){
                 r.setFocus("FUZZY-CUBESAT-COST");
@@ -488,8 +494,12 @@ public class GenericTask implements Callable {
             r.setFocus( "MANIFEST" );
             r.run();
 
-            r.setFocus( "MANIFEST1" );
+            ArrayList<String> extraRules=addExtraRules(r);
+            r.setFocus( "CHANNELS" );
             r.run();
+            Iterator<String> iter = extraRules.iterator();
+            while(iter.hasNext())
+                r.removeDefrule(iter.next());
             
             r.setFocus( "CAPABILITIES" );
             r.run();
@@ -529,7 +539,8 @@ public class GenericTask implements Callable {
                  call = call + "(assert (SYNERGIES::cross-registered-instruments " +
                 " (instruments " + payload + 
                 ") (degree-of-cross-registration spacecraft) " +
-                " (platform " + orbit +  " )))";
+                " (platform " + orbit +  " )" +
+                " (total-num-channels 0)))";
                  r.eval(call);  
                 }
          }       
@@ -668,8 +679,12 @@ public class GenericTask implements Callable {
             r.setFocus( "MANIFEST" );
             r.run();
             
-            r.setFocus( "MANIFEST1" );
+            ArrayList<String> extraRules=addExtraRules(r);
+            r.setFocus( "CHANNELS" );
             r.run();
+            Iterator<String> iter = extraRules.iterator();
+            while(iter.hasNext())
+                r.removeDefrule(iter.next());
             
             r.setFocus( "CAPABILITIES" );
             r.run();
@@ -708,8 +723,8 @@ public class GenericTask implements Callable {
             r.setFocus( "ASSIMILATION" );
             r.run();
             
-            r.setFocus( "FUZZY" );
-            r.run();
+//            r.setFocus( "FUZZY" );
+//            r.run();
             
             r.setFocus( "SYNERGIES" );
             r.run();
@@ -746,5 +761,39 @@ public class GenericTask implements Callable {
             e.printStackTrace();
         }
         return result;
+    }
+    
+    /**
+     * TODO had to put the rules here instead of clp file because the rules were firing when they shouldn't have been...
+     */
+    private ArrayList<String> addExtraRules(Rete r){
+        ArrayList<String> out = new ArrayList();
+        try {
+            String rule1name = "CHANNELS::compute-EON-vertical-spatial-resolution1";
+            String call1 = "(defrule " + rule1name +
+                    " ?s <- (SYNERGIES::cross-registered-instruments (platform ?plat) (total-num-channels 0)) " +
+                    "?c <- (accumulate (bind ?countss 0) "+
+                    "(bind ?countss (+ ?countss ?num)) "+
+                    "?countss "+
+                    "(CAPABILITIES::Manifested-instrument (orbit-string ?plat)(num-of-mmwave-band-channels ?num) )) "+
+                    "=> " +
+                    "(modify ?s (total-num-channels ?c)))";
+            
+            String rule2name ="CHANNELS::compute-EON-vertical-spatial-resolution2";
+            String call2 = "(defrule "+rule2name+
+                    " ?EON <- (CAPABILITIES::Manifested-instrument  (Vertical-Spatial-Resolution# nil) (orbit-string ?orbs)) "+
+                    "(SYNERGIES::cross-registered-instruments (total-num-channels ?c&~nil)(platform ?orbs)) "+
+                    "=> "+
+                    "(modify ?EON (Vertical-Spatial-Resolution# (compute-vertical-spatial-resolution-EON ?c))))";
+            r.eval(call1);
+            r.eval(call2);
+            
+            out.add(rule1name);
+            out.add(rule2name);
+        } catch (JessException ex) {
+            System.err.println("ExtraRules are wrong... in Generic Task");
+            Logger.getLogger(GenericTask.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return out;
     }
 }

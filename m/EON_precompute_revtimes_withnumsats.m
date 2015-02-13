@@ -8,8 +8,8 @@ function EON_precompute_revtimes_withnumsats()
 import rbsa.eoss.*
 import rbsa.eoss.local.*
 
-params = Params('C:\\Users\\Ana-Dani\\Dropbox\\Nozomi - Dani\\RBES SMAP for IEEEAero14','CRISP-ATTRIBUTES','test','normal','');
-% params = Params('C:\Users\Nozomi\Dropbox\Nozomi - Dani\RBES SMAP for IEEEAero14','CRISP-ATTRIBUTES','test','normal','');
+params = Params('C:\Users\SEAK1\Dropbox\Nozomi - Dani\EON_PATH','CRISP-ATTRIBUTES','test','normal','');
+% params = Params('C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH','CRISP-ATTRIBUTES','test','normal','');
 AE = ArchitectureEvaluator.getInstance;
 AE.init(1);
 revtimes = java.util.HashMap;
@@ -112,6 +112,7 @@ function params = init_STK()
     stkSetTimePeriodInSec(0, params.DURATION)
     stkSetEpoch('2013001.000000', 'YYYYDDD.HHMMSS');
     stkSetTimePeriodInSec(0, params.DURATION)
+    GEO_avg_revisit_time_constraint(15*60,params.DURATION,params.TSTEP);
     call = ['SetAnimation ' params.scenario_path ' StartAndCurrentTime UseAnalysisStartTime TimeStep ' num2str(params.TSTEP)];
     stkExec(params.conid,call);
 
@@ -183,7 +184,12 @@ function revtimes = analyze_mixed_constellation(fovs,nsat,stk_params,params)
                 stkNewObj(sat_path, 'Sensor', sensor_name);
                 sensor_path = [sat_path '/Sensor/' sensor_name]; 
                 % set the satellite sensor
-                stkSetSensor(stk_params.conid, sensor_path,'Rectangular', fov,fov);
+                 sensor_id = stkSetSensor(stk_params.conid, sensor_path,'Rectangular', fov,fov);
+                % apply constraint
+                if strcmp(orbits{i},'GEO-35788-equat-NA')
+                    call = ['SetConstraint ' sensor_path ' Intervals Exclude SetIntervals Load "' pwd '\GEO_avg_revtime.int"'];
+                    stkExec(stk_params.conid, call);
+                end
                 call = ['Chains ' constel_path ' Add ' sensor_path];  
                 stkExec(stk_params.conid, call);
             end
@@ -271,4 +277,4 @@ function revtimes = analyze_mixed_constellation(fovs,nsat,stk_params,params)
     for i = length(objects):-1:2
         stkUnload(objects{i});
     end
-end
+end 

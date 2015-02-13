@@ -27,21 +27,21 @@
 (defrule FUZZY-CUBESAT-COST::compute-lifetime
 ?miss <- (MANIFEST::Mission (lifetime nil) (orbit-altitude# ?h&~nil) (bus ?nunits&~nil))
 =>
-(modify ?miss (lifetime (assign-lifetime ?nunits ?h)))
+(modify ?miss (lifetime (assign-lifetime-fuzzy ?nunits ?h)))
 )
 
-(deffunction assign-lifetime (?nunits ?h)
-(return (min (get-orbit-lifetime ?h) (get-bus-lifetime ?nunits)))
+(deffunction assign-lifetime-fuzzy (?nunits ?h)
+(return (min (get-orbit-lifetime-fuzzy ?h) (get-bus-lifetime-fuzzy ?nunits)))
 )
 
-(deffunction get-orbit-lifetime (?h)
+(deffunction get-orbit-lifetime-fuzzy (?h)
 (if(<= ?h 450) then (return 0.5))
 (if(<= ?h 500) then (return 1.0))
 (if(<= ?h 600) then (return 5.0))
 (return 25.0)
 )
 
-(deffunction get-bus-lifetime (?nunits)
+(deffunction get-bus-lifetime-fuzzy (?nunits)
 (if(eq ?nunits 1U) then (return 1.0))
 (if(eq ?nunits 3U) then (return 1.0))
 (if(eq ?nunits 6U) then (return 3.0))
@@ -82,10 +82,10 @@
 (bind ?fv-rf (cost-fv ?rf 0.0))
 (bind ?fv-np (cost-fv ?np 0.0))
 (bind ?fv-ns (cost-fv ?ns 0.0))
-(modify ?miss (bus-cost# (* ?rf ?ns ?np (get-bus-cost ?b))) (bus-cost (fuzzyprod$ (create$ ?fv-rf ?fv-ns ?fv-np (cost-fv (get-bus-cost ?b) 30)))))
+(modify ?miss (bus-cost# (* ?rf ?ns ?np (get-bus-cost-fuzzy ?b))) (bus-cost (fuzzyprod$ (create$ ?fv-rf ?fv-ns ?fv-np (cost-fv (get-bus-cost ?b) 30)))))
 )
 
-(deffunction get-bus-cost(?nunits)
+(deffunction get-bus-cost-fuzzy(?nunits)
 (if(eq ?nunits 1U) then (return 0.3))
 (if(eq ?nunits 3U) then (return 1.0))
 (if(eq ?nunits 6U) then (return 3.0))

@@ -92,8 +92,8 @@ public class SearchPerformance implements Serializable {
     }    
     @Override
     public String toString() {
-        return "SearchPerformance after= " + nits + " its: avg_pareto_distance: " + avg_pareto_distance + 
-                " cheapest_max_benefit_arch: " + cheapest_max_benefit_arch.getScience() + " " + cheapest_max_benefit_arch.getCost() + " " + cheapest_max_benefit_arch.toString();
+        return "SearchPerformance after= " + nits + " its: avg_pareto_distance: " + avg_pareto_distance;// + 
+//                " cheapest_max_benefit_arch: " + cheapest_max_benefit_arch.getScience() + " " + cheapest_max_benefit_arch.getCost() + " " + cheapest_max_benefit_arch.toString();
     }
     public int compareTo(SearchPerformance other) {
         if (other == null || other.getCheapest_max_benefit_arch() == null) return 1;

@@ -79,7 +79,7 @@ function EON_explanation_facility_OpeningFcn(hObject, eventdata, handles, vararg
     set(gcf,'MenuBar','figure');
     if ~exist('params','var') || isempty(params)
 %         folder = 'C:\Users\DS925\Dropbox\Nozomi - Dani\RBES SMAP for IEEEAero14';
-        folder =  'C:\Users\Nozomi\Dropbox\Nozomi - Dani\RBES SMAP for IEEEAero14';
+        folder =  'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH';
 %         folder = 'C:\Users\SEAK1\Dropbox\Nozomi - Dani\RBES SMAP for IEEEAero14';
         params = rbsa.eoss.local.Params(folder,'FUZZY-ATTRIBUTES','test','normal','');%C:\\Users\\Ana-Dani\\Dropbox\\EOCubesats\\RBES_Cubesats7" OR C:\\Users\\dani\\My Documents\\My Dropbox\\EOCubesats\\RBES_Cubesats7
         AE = rbsa.eoss.ArchitectureEvaluator.getInstance;
@@ -223,7 +223,7 @@ function RBES_plot25(handles,ax,archs,results, inaxis,filter_func,PARETO,FUZZY)
         colors = COLORS(1:length(unique_vals));
         
         %plot reference architectures (search from back b/c ref archs inserted at back)
-        ref_colors = {'b','r','c'};
+        ref_colors = {'b','r','c','g'};
         [a,b]=size(ref_arch);
         for i = 1:b
             for j = resCol.getResults.size-1:-1:0
@@ -636,7 +636,7 @@ global ref_arch ref_label
 
 %clearvars -global results architecture resCol x y
 
-[FileName,PathName,FilterIndex] = uigetfile( './*.*' );
+[FileName,PathName,FilterIndex] = uigetfile( './*.rs*' );
 
 resMngr = rbsa.eoss.ResultManager.getInstance();
 resCol = resMngr.loadResultCollectionFromFile( [PathName FileName] );

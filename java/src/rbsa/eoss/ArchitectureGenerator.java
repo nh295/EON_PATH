@@ -190,8 +190,8 @@ public class ArchitectureGenerator {
         return new_one;
     }
     public Architecture getTestArch() { // This architecture has a science score of 0.02
-        Architecture arch = new Architecture("0000000000000000010100001",5);
-//        Architecture arch = new Architecture("0000000000000000000000001",5);
+//        Architecture arch = new Architecture("0000000000000000000000010",5);
+        Architecture arch = new Architecture("1000000000000000000000000",5);
         arch.setEval_mode("DEBUG");
         return arch;
     }
@@ -264,7 +264,6 @@ public class ArchitectureGenerator {
             e.printStackTrace();
             return null;
         }
-        
     }
     public void setPopulation(ArrayList<Architecture> population) {
         this.population = population;
