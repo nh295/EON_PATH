@@ -1,0 +1,532 @@
+version: '0.25'
+name: 'Document'
+description: ' '
+rules:
+  - type: axis property rule
+    kind: barRatio
+    axis: C
+    value: 0.375
+  - type: axis property rule
+    kind: titleRatio
+    axis: C
+    value: 0.5
+  - type: axis property rule
+    kind: titleSize
+    axis: C
+    value: 24
+children:
+  - name: 'Parent'
+    description: ''
+    rules:
+      - type: data
+        name: 'Exp0.xls'
+        fileinfo: ['C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp0.xls', 'excel']
+        data tag: 'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp0.xls'
+      - type: polling rule
+        datatag: 'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp0.xls'
+        interval: -1.0
+      - type: "camera rule"
+        axis: X
+        view: XY
+        kind: position
+        value: 0.485086036328
+      - type: "box position rule"
+        kind: window
+        spec: width
+        value: 969
+      - type: "box position rule"
+        kind: window
+        spec: height
+        value: 1450
+      - type: axis
+        axis: X
+        column: 'sci'
+      - type: labeling rule
+        column: sci
+        labels: ['0', '0', '0', '0', '0', '0', '1', '1', '1', '1', '1']
+      - type: plotting limit rule
+        column: 'sci'
+        sense: upper
+        limit: 1.0
+      - type: tick mark rule
+        column: 'sci'
+        kind: major
+        value: 0.1
+      - type: "camera rule"
+        axis: X
+        view: XY
+        kind: focus
+        value: 0.485086036328
+      - type: "camera rule"
+        axis: X
+        view: XY
+        kind: viewUp
+        value: 0.0
+      - type: "camera rule"
+        axis: Y
+        view: XY
+        kind: position
+        value: 0.530124198002
+      - type: "camera rule"
+        axis: Y
+        view: XY
+        kind: focus
+        value: 0.530124198002
+      - type: "camera rule"
+        axis: Y
+        view: XY
+        kind: viewUp
+        value: 1.0
+      - type: "camera rule"
+        axis: Z
+        view: XY
+        kind: position
+        value: 3.025
+      - type: "camera rule"
+        axis: Z
+        view: XY
+        kind: focus
+        value: 0.0
+      - type: "camera rule"
+        axis: Z
+        view: XY
+        kind: viewUp
+        value: 0.0
+      - type: axis
+        axis: Y
+        column: 'cost'
+      - type: "box position rule"
+        kind: window
+        spec: X
+        value: 971
+      - type: labeling rule
+        column: cost
+        labels: ['0', '300', '600', '900', '1200', '1500']
+      - type: "camera rule"
+        axis: X
+        view: 
+        kind: position
+        value: -0.00267949192431
+      - type: "box position rule"
+        kind: window
+        spec: Y
+        value: 0
+      - type: "camera rule"
+        axis: X
+        view: 
+        kind: focus
+        value: -0.00267949192431
+      - type: "camera rule"
+        axis: X
+        view: 
+        kind: viewUp
+        value: 0.0
+      - type: "camera rule"
+        axis: Y
+        view: 
+        kind: position
+        value: 0.00535898384862
+      - type: "camera rule"
+        axis: Y
+        view: 
+        kind: focus
+        value: 0.00535898384862
+      - type: "camera rule"
+        axis: Y
+        view: 
+        kind: viewUp
+        value: 1.0
+      - type: "camera rule"
+        axis: Z
+        view: 
+        kind: position
+        value: 1.0
+      - type: "camera rule"
+        axis: Z
+        view: 
+        kind: focus
+        value: 0.0
+      - type: "camera rule"
+        axis: Z
+        view: 
+        kind: viewUp
+        value: 0.0
+    children:
+      - name: 'Exp'
+        description: ''
+        rules:
+          - type: tick mark rule
+            column: 'sci'
+            kind: align
+            value: 0.0
+          - type: tick mark rule
+            column: 'sci'
+            kind: major
+            value: 0.1
+          - type: tick mark rule
+            column: 'sci'
+            kind: minor
+            value: 0.00399996
+          - type: label format rule
+            column: 'cost'
+            format: '%.0f'
+          - type: number of labels rule
+            column: 'cost'
+            nLabels: 6
+          - type: "box position rule"
+            kind: window
+            spec: width
+            value: 969
+          - type: "box position rule"
+            kind: window
+            spec: height
+            value: 1450
+          - type: color map rule
+            column: cost
+            colormap: jet
+          - type: reverse rule
+            kind: colormap
+            column: cost
+            reverse: False
+          - type: reverse rule
+            kind: plotting
+            column: cost
+            reverse: False
+          - type: tick mark rule
+            column: 'cost'
+            kind: align
+            value: 0.0
+          - type: tick mark rule
+            column: 'cost'
+            kind: major
+            value: 299.997
+          - type: tick mark rule
+            column: 'cost'
+            kind: minor
+            value: 49.9995
+          - type: data
+            name: 'Exp1.xls'
+            fileinfo: ['C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp1.xls', 'excel']
+            data tag: 'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp1.xls'
+          - type: polling rule
+            datatag: 'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp1.xls'
+            interval: -1.0
+          - type: labeling rule
+            column: sci
+            labels: ['0', '0', '0', '0', '0', '0', '1', '1', '1', '1', '1']
+          - type: labeling rule
+            column: cost
+            labels: ['0', '300', '600', '900', '1200', '1500']
+          - type: label format rule
+            column: 'sci'
+            format: '%.0f'
+          - type: number of labels rule
+            column: 'sci'
+            nLabels: 6
+          - type: color map rule
+            column: sci
+            colormap: jet
+          - type: reverse rule
+            kind: colormap
+            column: sci
+            reverse: False
+          - type: reverse rule
+            kind: plotting
+            column: sci
+            reverse: False
+  - name: 'Page 002'
+    description: ''
+    rules:
+      - type: "camera rule"
+        axis: Z
+        view: None
+        kind: viewUp
+        value: 0.0
+      - type: data
+        name: 'L18Analysis.xlsx'
+        fileinfo: ['C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Sensitivity Analysis 2015_02_06\L18Analysis.xlsx', 'excel']
+        data tag: 'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Sensitivity Analysis 2015_02_06\L18Analysis.xlsx'
+      - type: polling rule
+        datatag: 'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Sensitivity Analysis 2015_02_06\L18Analysis.xlsx'
+        interval: -1.0
+      - type: "camera rule"
+        axis: X
+        view: None
+        kind: focus
+        value: 0.0
+      - type: "camera rule"
+        axis: X
+        view: None
+        kind: viewUp
+        value: 0.0
+      - type: "camera rule"
+        axis: Y
+        view: None
+        kind: position
+        value: 0.0
+      - type: "camera rule"
+        axis: Y
+        view: None
+        kind: focus
+        value: 0.0
+      - type: "camera rule"
+        axis: Y
+        view: None
+        kind: viewUp
+        value: 1.0
+      - type: "camera rule"
+        axis: Z
+        view: None
+        kind: position
+        value: 1.0
+      - type: "camera rule"
+        axis: Z
+        view: None
+        kind: focus
+        value: 0.0
+  - name: 'Parent'
+    description: ''
+    rules:
+      - type: label format rule
+        column: 'cost'
+        format: '%.2f'
+      - type: labeling rule
+        column: cost
+        labels: ['0.00', '300.00', '599.99', '899.99', '1199.99', '1499.99']
+      - type: "box position rule"
+        kind: window
+        spec: Y
+        value: 29
+      - type: data
+        name: 'Exp0.xls'
+        fileinfo: ['C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp0.xls', 'excel']
+        data tag: 'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp0.xls'
+      - type: polling rule
+        datatag: 'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp0.xls'
+        interval: -1.0
+      - type: number of labels rule
+        column: 'cost'
+        nLabels: 6
+      - type: color map rule
+        column: cost
+        colormap: jet
+      - type: reverse rule
+        kind: colormap
+        column: cost
+        reverse: False
+      - type: reverse rule
+        kind: plotting
+        column: cost
+        reverse: False
+      - type: tick mark rule
+        column: 'cost'
+        kind: align
+        value: 0.0
+      - type: tick mark rule
+        column: 'cost'
+        kind: major
+        value: 299.997
+      - type: tick mark rule
+        column: 'cost'
+        kind: minor
+        value: 49.9995
+      - type: axis
+        axis: X
+        column: 'sci'
+      - type: label format rule
+        column: 'sci'
+        format: '%.2f'
+      - type: labeling rule
+        column: sci
+        labels: [' ']
+      - type: "box position rule"
+        kind: window
+        spec: X
+        value: 14
+      - type: edge labeling rule
+        axis: Y
+        edges: [1]
+      - type: "camera rule"
+        axis: X
+        view: XY
+        kind: position
+        value: 0.590432852445
+      - type: "camera rule"
+        axis: X
+        view: XY
+        kind: focus
+        value: 0.590432852445
+      - type: "camera rule"
+        axis: X
+        view: XY
+        kind: viewUp
+        value: 0.0
+      - type: "camera rule"
+        axis: Y
+        view: XY
+        kind: position
+        value: 0.503349364905
+      - type: "camera rule"
+        axis: Y
+        view: XY
+        kind: focus
+        value: 0.503349364905
+      - type: "camera rule"
+        axis: Y
+        view: XY
+        kind: viewUp
+        value: 1.0
+      - type: "camera rule"
+        axis: Z
+        view: XY
+        kind: position
+        value: 2.5
+      - type: "camera rule"
+        axis: Z
+        view: XY
+        kind: focus
+        value: 0.0
+      - type: "camera rule"
+        axis: Z
+        view: XY
+        kind: viewUp
+        value: 0.0
+      - type: axis
+        axis: Y
+        column: 'cost'
+    children:
+      - name: 'Exp1'
+        description: ''
+        rules:
+          - type: "camera rule"
+            axis: X
+            view: XY
+            kind: viewUp
+            value: 0.0
+          - type: "camera rule"
+            axis: Y
+            view: XY
+            kind: position
+            value: 0.540266259887
+          - type: "camera rule"
+            axis: Y
+            view: XY
+            kind: focus
+            value: 0.540266259887
+          - type: "camera rule"
+            axis: Z
+            view: XY
+            kind: position
+            value: 2.5
+          - type: "camera rule"
+            axis: Z
+            view: XY
+            kind: focus
+            value: 0.0
+          - type: "camera rule"
+            axis: Z
+            view: XY
+            kind: viewUp
+            value: 0.0
+          - type: "camera rule"
+            axis: X
+            view: XY
+            kind: position
+            value: 0.38731354743
+          - type: "box position rule"
+            kind: window
+            spec: width
+            value: 600
+          - type: data
+            name: 'Exp1.xls'
+            fileinfo: ['C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp1.xls', 'excel']
+            data tag: 'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp1.xls'
+          - type: polling rule
+            datatag: 'C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Exp1.xls'
+            interval: -1.0
+          - type: "box position rule"
+            kind: window
+            spec: X
+            value: 807
+          - type: "box position rule"
+            kind: window
+            spec: Y
+            value: 0
+          - type: "camera rule"
+            axis: Y
+            view: XY
+            kind: viewUp
+            value: 1.0
+          - type: labeling rule
+            column: sci
+            labels: ['0.00', '0.00', '0.01', '0.01', '0.02', '0.02', '0.02', '0.03', '0.03', '0.04', '0.04', '0.04', '0.05', '0.05', '0.06', '0.06', '0.06', '0.07', '0.07', '0.08', '0.08', '0.08', '0.09', '0.09', '0.10', '0.10', '0.11', '0.11', '0.11', '0.12', '0.12', '0.13', '0.13', '0.13', '0.14', '0.14', '0.15', '0.15', '0.15', '0.16', '0.16', '0.17', '0.17', '0.17', '0.18', '0.18', '0.19', '0.19', '0.19', '0.20']
+          - type: labeling rule
+            column: cost
+            labels: ['0.00', '300.00', '599.99', '899.99', '1199.99', '1499.99']
+          - type: label format rule
+            column: 'cost'
+            format: '%.2f'
+          - type: number of labels rule
+            column: 'cost'
+            nLabels: 6
+          - type: color map rule
+            column: cost
+            colormap: jet
+          - type: reverse rule
+            kind: colormap
+            column: cost
+            reverse: False
+          - type: reverse rule
+            kind: plotting
+            column: cost
+            reverse: False
+          - type: tick mark rule
+            column: 'cost'
+            kind: align
+            value: 0.0
+          - type: tick mark rule
+            column: 'cost'
+            kind: major
+            value: 299.997
+          - type: tick mark rule
+            column: 'cost'
+            kind: minor
+            value: 49.9995
+          - type: label format rule
+            column: 'sci'
+            format: '%.2f'
+          - type: number of labels rule
+            column: 'sci'
+            nLabels: 6
+          - type: color map rule
+            column: sci
+            colormap: jet
+          - type: reverse rule
+            kind: colormap
+            column: sci
+            reverse: False
+          - type: reverse rule
+            kind: plotting
+            column: sci
+            reverse: False
+          - type: tick mark rule
+            column: 'sci'
+            kind: align
+            value: 0.0
+          - type: tick mark rule
+            column: 'sci'
+            kind: major
+            value: 0.00404007501948
+          - type: tick mark rule
+            column: 'sci'
+            kind: minor
+            value: 8.08015003896e-05
+          - type: "box position rule"
+            kind: window
+            spec: height
+            value: 516
+          - type: "camera rule"
+            axis: X
+            view: XY
+            kind: focus
+            value: 0.38731354743

@@ -1,12 +1,22 @@
-global results archs params
 
-narch = 1000;%length(archs);
+resMngr = rbsa.eoss.ResultManager.getInstance();
+currentDir = cd;
+
+%open all results files that need to analyzed
+[FileName,PathName,FilterIndex] = uigetfile( './*.rs*','MultiSelect','off');
+
+resCol = resMngr.loadResultCollectionFromFile( [PathName FileName] );
+results = resCol.getResults;
+
+narch = results.size;
 xvals = zeros(narch,1);
 yvals = zeros(narch,1);
-    for i = 1:narch
-        xvals(i) = results.get(i-1).getScience;
-        yvals(i) = results.get(i-1).getCost;
-    end 
+archs = cell(narch,1);
+for i = 1:narch
+    xvals(i) = results.get(i-1).getScience;
+    yvals(i) = results.get(i-1).getCost;
+    archs{i} = results.get(i-1).getArch;
+end
 [x_pareto, y_pareto, inds, ~ ] = pareto_front([xvals yvals] , {'LIB', 'SIB'});
 
 pf_archs = archs(inds);
@@ -52,41 +62,41 @@ for i=1:a
 end
 percent_pf_with_n_orbits = pf_num_orbits./a;
 
-%% num instrument
-%first num is for sats with 0 instruments
-%percent arch with n instruments
-arch_n_inst = zeros(a,1);
-archs_with_n_inst = zeros(9,1);
-for i=1:narch
-    ninst = 1;
-    for j = 1:length(params.orbit_list)
-        tmp = archs{i}.getPayloadInOrbit(params.orbit_list(j));
-        ninst = ninst + tmp.length;
-    end
-    arch_n_inst(i)=ninst;
-    archs_with_n_inst(ninst) = archs_with_n_inst(ninst)+1;
-end
-percent_with_n_inst = archs_with_n_inst/narch;
-
-%percent arch with n inst on pf
-n_inst_on_pf = zeros(9,1);
-for i=1:a
-    ninst = arch_n_inst(inds(i));
-    n_inst_on_pf(ninst) = n_inst_on_pf(ninst)+1;
-end
-percent_with_n_inst_pf = n_inst_on_pf./archs_with_n_inst;
-
-%percent arch on pf with n inst 
-pf_num_inst = zeros(9,1);
-for i=1:a
-    ninst = 1;
-    for j = 1:length(params.orbit_list)
-        tmp = pf_archs{i}.getPayloadInOrbit(params.orbit_list(j));
-        ninst = ninst + tmp.length;
-    end
-    pf_num_inst(ninst) = pf_num_inst(ninst)+1;
-end
-percent_pf_with_n_inst = pf_num_inst./a;
+% %% num instrument
+% %first num is for sats with 0 instruments
+% %percent arch with n instruments
+% arch_n_inst = zeros(a,1);
+% archs_with_n_inst = zeros(14,1);
+% for i=1:narch
+%     ninst = 1;
+%     for j = 1:length(params.orbit_list)
+%         tmp = archs{i}.getPayloadInOrbit(params.orbit_list(j));
+%         ninst = ninst + tmp.length;
+%     end
+%     arch_n_inst(i)=ninst;
+%     archs_with_n_inst(ninst) = archs_with_n_inst(ninst)+1;
+% end
+% percent_with_n_inst = archs_with_n_inst/narch;
+% 
+% %percent arch with n inst on pf
+% n_inst_on_pf = zeros(11,1);
+% for i=1:a
+%     ninst = arch_n_inst(inds(i));
+%     n_inst_on_pf(ninst) = n_inst_on_pf(ninst)+1;
+% end
+% percent_with_n_inst_pf = n_inst_on_pf./archs_with_n_inst;
+% 
+% %percent arch on pf with n inst 
+% pf_num_inst = zeros(11,1);
+% for i=1:a
+%     ninst = 1;
+%     for j = 1:length(params.orbit_list)
+%         tmp = pf_archs{i}.getPayloadInOrbit(params.orbit_list(j));
+%         ninst = ninst + tmp.length;
+%     end
+%     pf_num_inst(ninst) = pf_num_inst(ninst)+1;
+% end
+% percent_pf_with_n_inst = pf_num_inst./a;
 
 %% num sats per plane
 %first num is for sats with 0 instruments
@@ -122,7 +132,7 @@ percent_pf_with_n_satsPerPlane = pf_num_satsPerPlane./a;
 %% GEO vs no GEO
 
 %percent arch with GEO
-arch_with_GEO = zeros(a,1);
+arch_with_GEO = zeros(narch,1);
 archs_with_GEO = 0;
 for i=1:narch
     tmp = archs{i}.getPayloadInOrbit(params.orbit_list(1));
@@ -156,10 +166,16 @@ percent_pf_with_GEO = pf_with_GEO./a;
 %% with combos of 50 + 118 + 183
 
 %percent arch with 118 and 183
-arch_with_50_183 = zeros(a,1);
-arch_with_118_183 = zeros(a,1);
-arch_with_50_118_183 = zeros(a,1);
-arch_with_ATMS = zeros(a,1);
+arch_with_50 = zeros(narch,1);
+arch_with_118 = zeros(narch,1);
+arch_with_183 = zeros(narch,1);
+arch_with_50_183 = zeros(narch,1);
+arch_with_118_183 = zeros(narch,1);
+arch_with_50_118_183 = zeros(narch,1);
+arch_with_ATMS = zeros(narch,1);
+archs_with_50 = 0;
+archs_with_118 = 0;
+archs_with_183 = 0;
 archs_with_50_183 = 0;
 archs_with_118_183 = 0;
 archs_with_50_118_183 = 0;
@@ -187,6 +203,18 @@ for i=1:narch
             end
         end
     end
+    if has_50
+        arch_with_50(i)=1;
+        archs_with_50 = archs_with_50 +1;
+    end
+    if has_118
+        arch_with_118(i)=1;
+        archs_with_118 = archs_with_118 +1;
+    end 
+    if has_183
+        arch_with_183(i)=1;
+        archs_with_183 = archs_with_183 +1;
+    end 
     if has_50 && has_183
         arch_with_50_183(i)=1;
         archs_with_50_183 = archs_with_50_183 +1;
@@ -195,37 +223,69 @@ for i=1:narch
         arch_with_118_183(i)=1;
         archs_with_118_183 = archs_with_118_183 +1;
     end
+     if has_50 && has_118 && has_183
+        arch_with_118_183(i)=1;
+        archs_with_118_183 = archs_with_118_183 +1;
+    end
     if has_ATMS
         arch_with_ATMS(i)=1;
         archs_with_ATMS = archs_with_ATMS +1;
     end
 end
+percent_with_50 = archs_with_50/narch;
+percent_with_118 = archs_with_118/narch;
+percent_with_183 = archs_with_183/narch;
 percent_with_50_183 = archs_with_50_183/narch;
 percent_with_118_183 = archs_with_118_183/narch;
+percent_with_50_118_183 = archs_with_50_118_183/narch;
 percent_with_ATMS = archs_with_ATMS/narch;
 
 %percent arch with GEO on pf
+with_50_on_pf = 0;
+with_118_on_pf = 0;
+with_183_on_pf = 0;
 with_50_183_on_pf = 0;
 with_118_183_on_pf = 0;
+with_50_118_183_on_pf = 0;
 with_ATMS_on_pf = 0;
 for i=1:a
+    if arch_with_50(inds(i))
+        with_50_on_pf = with_50_on_pf+1;
+    end
+    if arch_with_118(inds(i))
+        with_118_on_pf = with_118_on_pf+1;
+    end
+    if arch_with_183(inds(i))
+        with_183_on_pf = with_183_on_pf+1;
+    end
     if arch_with_50_183(inds(i))
         with_50_183_on_pf = with_50_183_on_pf+1;
     end
     if arch_with_118_183(inds(i))
         with_118_183_on_pf = with_118_183_on_pf+1;
     end
+    if arch_with_50_118_183(inds(i))
+        with_50_118_183_on_pf = with_50_118_183_on_pf+1;
+    end
     if arch_with_ATMS(inds(i))
         with_ATMS_on_pf = with_ATMS_on_pf+1;
     end
 end
+percent_with_50_pf = with_50_on_pf/archs_with_50_183;
+percent_with_118_pf = with_118_on_pf/archs_with_50_183;
+percent_with_183_pf = with_183_on_pf/archs_with_50_183;
 percent_with_50_183_pf = with_50_183_on_pf/archs_with_50_183;
 percent_with_118_183_pf = with_118_183_on_pf/archs_with_118_183;
+percent_with_50_118_183_pf = with_50_118_183_on_pf/archs_with_50_183;
 percent_with_ATMS_pf = with_ATMS_on_pf/archs_with_ATMS;
 
 %percent arch on pf with GEO  
+pf_with_50 = 0;
+pf_with_118 = 0;
+pf_with_183 = 0;
 pf_with_50_183 = 0;
 pf_with_118_183 = 0;
+pf_with_50_118_183 = 0;
 pf_with_ATMS = 0;
 for i=1:a
     tmp = pf_archs{i}.getPayloadInOrbit(params.orbit_list(1));
@@ -250,29 +310,44 @@ for i=1:a
             end
         end
     end
+    if has_50 
+        pf_with_50 = pf_with_50 +1;
+    end
+    if has_118
+        pf_with_118 = pf_with_118 +1;
+    end
+    if has_183
+        pf_with_183 = pf_with_183 +1;
+    end
     if has_50 && has_183
         pf_with_50_183 = pf_with_50_183 +1;
     end
     if has_118 && has_183
         pf_with_118_183 = pf_with_118_183 +1;
     end
+    if has_50 && has_118 && has_183
+        pf_with_50_118_183 = pf_with_50_118_183 +1;
+    end
     if has_ATMS
         pf_with_ATMS = pf_with_ATMS +1;
     end
 end
-
+percent_pf_with_50 = pf_with_50/a;
+percent_pf_with_118 = pf_with_118/a;
+percent_pf_with_183 = pf_with_183/a;
 percent_pf_with_50_183 = pf_with_50_183/a;
 percent_pf_with_118_183 = pf_with_118_183/a;
+percent_pf_with_50_118_183 = pf_with_50_118_183/a;
 percent_pf_with_ATMS = pf_with_ATMS/a;
 
 %% occupies orbit
 
 %percent arch occupying orbit x
-arch_in_GEO = zeros(a,1);
-arch_in_600SSO = zeros(a,1);
-arch_in_600ISS = zeros(a,1);
-arch_in_800SSOAM = zeros(a,1);
-arch_in_800SSOPM = zeros(a,1);
+arch_in_GEO = zeros(narch,1);
+arch_in_600SSO = zeros(narch,1);
+arch_in_600ISS = zeros(narch,1);
+arch_in_800SSOAM = zeros(narch,1);
+arch_in_800SSOPM = zeros(narch,1);
 archs_in_GEO = 0;
 archs_in_600SSO = 0;
 archs_in_600ISS = 0;
@@ -367,3 +442,15 @@ percent_pf_in_600SSO = pf_in_600SSO/a;
 percent_pf_in_600ISS = pf_in_600ISS/a;
 percent_pf_in_800SSOAM = pf_in_800SSOAM/a;
 percent_pf_in_800SSOPM = pf_in_800SSOPM/a;
+
+fprintf('\t%% in population\t %% with feature on PF\t %% on PF with feature\n');
+fprintf('hasGEO\t %d\t %d\t %d\t\n',percent_with_GEO,percent_with_GEO_pf,percent_pf_with_GEO);
+fprintf('has50\t %d\t %d\t %d\t\n',percent_with_50,percent_with_50_pf,percent_pf_with_50);
+fprintf('has118\t %d\t %d\t %d\t\n',percent_with_118,percent_with_118_pf,percent_pf_with_118);
+fprintf('has183\t %d\t %d\t %d\t\n',percent_with_183,percent_with_183_pf,percent_pf_with_183);
+fprintf('hasATMS\t %d\t %d\t %d\t\n',percent_with_ATMS,percent_with_ATMS_pf,percent_pf_with_ATMS);
+fprintf('inGEO\t %d\t %d\t %d\t\n',percent_in_GEO,percent_in_GEO_pf,percent_pf_in_GEO);
+fprintf('in600ISS\t %d\t %d\t %d\t\n',percent_in_600ISS,percent_in_600ISS_pf,percent_pf_in_600ISS);
+fprintf('in600SSO\t %d\t %d\t %d\t\n',percent_in_600SSO,percent_in_600SSO_pf,percent_pf_in_600SSO);
+fprintf('in800SSOAM\t %d\t %d\t %d\t\n',percent_in_800SSOAM,percent_in_800SSOAM_pf,percent_pf_in_800SSOAM);
+fprintf('in800SSOPM\t %d\t %d\t %d\t\n',percent_in_800SSOPM,percent_in_800SSOPM_pf,percent_pf_in_800SSOPM);

@@ -83,7 +83,7 @@ public class RBSAEOSSSMAP {
                 //ArrayList<Architecture> init_pop = ResultManager.getInstance().loadResultCollectionFromFile(params.initial_pop).getPopulation();
                 for (int i = 0;i<25;i++) {
                     params = new Params( path, "CRISP-ATTRIBUTES", "test","normal","search_heuristic_rules_smap_2");//FUZZY or CRISP
-                    AE.init(11);
+                    AE.init(7);
                     AE.evalMinMax();
                     ATE.setTerm_crit(new SearchOptions(POP_SIZE,MAX_SEARCH_ITS,0.5,0.1,0.5,init_pop));
                     ATE.search_NSGA2();

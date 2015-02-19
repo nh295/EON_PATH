@@ -1,3 +1,14 @@
+function [keySet,dist2PFMat] = dist_to_parteofront()
+
+%This function loads the data from multiple results files and outputs the
+%bit string of an architecture and its corresponding distance from the
+%pareto front. The architecture bit string is formatted as number of
+%satellites per plane and then the bit string that represents the
+%instruments to orbits assignment. The distance matrix rows are all the unique
+%architectures and the columns are for each results file loaded. If there
+%is a null value (ie []) then it means that the architecture did not exist
+%in the population in that result file.
+
 resMngr = rbsa.eoss.ResultManager.getInstance();
 currentDir = cd;
 
@@ -43,6 +54,16 @@ for i=1:numFiles
         archs{j} = results.get(j-1).getArch;
     end
     
+    
+    %normalize all data so that each metric is in interval [0,1]
+    minSci = min(xvals);
+    maxSci = max(xvals-minSci);
+    minCost = min(yvals);
+    maxCost = max(yvals-minCost);
+    
+    xvals = (xvals-minSci)/maxSci;
+    yvals = (yvals-minCost)/maxCost;
+    
     %find the architectures on the pareto front
     [x_pareto, y_pareto, inds, ~ ] = pareto_front([xvals yvals] , {'LIB', 'SIB'});
     pf_archs = archs(inds);
@@ -63,7 +84,10 @@ for i=1:numFiles
     minDist2PF = min(D,[],2);
     
     for j = 1:narch
-        key = char(archs{j}.getKey);
+        clear distances2PF;
+        bitString = double(archs{j}.getBitString)';       
+        numSat = archs{j}.getNsats;
+        key = mat2str([numSat,bitString]);
         %check to see if arch is already in map
         if mapArchs.isKey(key);
             %check to see if arch dist to PF has already been entered (there maybe duplicate archs in a population)
@@ -74,13 +98,14 @@ for i=1:numFiles
             end
         %if arch is not in map yet, add it    
         else
-            mapArchs(key)={minDist2PF(j)};
+            distances2PF{1,i} = minDist2PF(j);
+            mapArchs(key) = distances2PF;
         end
     end
 end
 
-
-%create a csv table from mapArchs
+clear dist2PFMat
+%create a matrix from mapArchs
 keySet = keys(mapArchs);
 numKeys = length(keySet);
 archKeys = cell(numKeys,1);

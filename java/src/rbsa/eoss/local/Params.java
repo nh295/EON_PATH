@@ -279,7 +279,7 @@ public class Params {
         launch_costs.put("SSO-800-SSO-AM",5.0);
         launch_costs.put("LEO-600-ISS-NA",5.0);
         
-        time_horizon = 3.0;
+        time_horizon = 3;
         lifetimes = new HashMap<String,Double>();
         lifetimes.put("GEO-35788-equat-NA",15.0);
         lifetimes.put("LEO-400-ISS-NA",0.5);

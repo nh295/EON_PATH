@@ -1,0 +1,42 @@
+function interpolatedCost = multiplot_features(feature_data,feature_num,feature_val,suppress_noHas)
+
+uiopen('C:\Users\Nozomi\Dropbox\Nozomi - Dani\EON_PATH\Data Analysis\Sensitivity Analysis 2015_02_06\Figures\PF.fig',1)
+for i=1:length(feature_data)
+    subplot(3,6,i)
+    filedata = feature_data{i};
+    
+    [a,~] = size(filedata);
+    has = zeros(a,1);
+    notHas = zeros(a,1);
+    for j=1:a
+        if filedata(j,[8])==[1]
+% if true
+            has(j) = true;
+        else
+            notHas = false;
+        end
+    end    
+    
+    has_ind = find(has);
+    notHas_ind = find(notHas);
+    
+    %normalize data so everything is in [0,1]
+    minSci = min(filedata(:,1));
+    maxSci = max(filedata(:,1)-minSci);
+    minCost = min(filedata(:,2));
+    maxCost = max(filedata(:,2)-minCost);
+    
+    normSci=(filedata(:,1)-minSci)/maxSci;
+    normCost=(filedata(:,2)-minCost)/maxCost;
+    
+    hold on
+    scatter(normSci(has_ind),normCost(has_ind),'b')
+    if ~suppress_noHas
+        scatter(normSci(notHas_ind),normCost(notHas_ind),'r')
+    end
+    title(strcat('Exp',num2str(i)))
+    xlabel('sci')
+    ylabel('cost')
+    axis([0,1,0,1]);
+    hold off
+end
